@@ -44,6 +44,13 @@
   font-weight: 600;
 }
 
+.app__version {
+  font-size: 0.7rem;
+  font-weight: 400;
+  opacity: 0.5;
+  vertical-align: middle;
+}
+
 .app__controls {
   display: flex;
   flex-wrap: wrap;

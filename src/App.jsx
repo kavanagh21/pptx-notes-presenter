@@ -1,24 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { extractNotesFromPptx } from './lib/pptxNotes';
+import { readFileAsArrayBuffer } from './lib/readFile';
 import { getLastDeck, saveLastDeck, clearLastDeck } from './lib/storage';
 import { useDarkMode } from './hooks/useDarkMode';
 import { useFullscreen } from './hooks/useFullscreen';
 import { SlidePreview } from './components/SlidePreview';
 import { NotesPanel, getTopLevelGroups } from './components/NotesPanel';
 import './App.css';
-
-/**
- * Read a File/Blob into an ArrayBuffer using FileReader (works on all iOS versions).
- * File.arrayBuffer() can fail or return bad data on some iPad Safari versions.
- */
-function readFileAsArrayBuffer(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = () => reject(reader.error || new Error('Failed to read file'));
-    reader.readAsArrayBuffer(file);
-  });
-}
 
 const DEBOUNCE_SAVE_MS = 600;
 
@@ -85,7 +73,15 @@ function App() {
     setResumeMode(false);
     try {
       const buffer = await readFileAsArrayBuffer(selectedFile);
-      const slides = await extractNotesFromPptx(buffer);
+      let slides;
+      try {
+        slides = await extractNotesFromPptx(buffer);
+      } catch (parseErr) {
+        throw new Error(
+          `Failed to parse presentation (${selectedFile.name}, ` +
+          `${(buffer.byteLength / 1024).toFixed(0)} KB). ${parseErr?.message || ''}`
+        );
+      }
       setArrayBuffer(buffer);
       setExtractedSlides(slides);
       setFile(selectedFile);
@@ -230,13 +226,13 @@ function App() {
     >
       <header className="app__header">
         <div className="app__header-inner">
-          <h1 className="app__title">Presenter Notes</h1>
+          <h1 className="app__title">Presenter Notes <span className="app__version">v1.0.0</span></h1>
           <div className="app__controls">
             <label className="app__file-label">
               <span className="app__file-button">Choose file</span>
               <input
                 type="file"
-                accept=".pptx,.ppsx"
+                accept=".pptx,.ppsx,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.openxmlformats-officedocument.presentationml.slideshow"
                 onChange={onFileChange}
                 className="app__file-input"
                 disabled={loading}

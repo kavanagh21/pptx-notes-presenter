@@ -1,14 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { pptxToHtml } from '@jvmr/pptx-to-html';
-
-function readFileAsArrayBuffer(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = () => reject(reader.error || new Error('Failed to read file'));
-    reader.readAsArrayBuffer(file);
-  });
-}
+import { readFileAsArrayBuffer } from '../lib/readFile';
 
 const FALLBACK_MSG = 'Preview unavailable for this slide (notes still available)';
 
