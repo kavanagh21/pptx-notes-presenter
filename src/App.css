@@ -1,42 +1,417 @@
-#root {
-  max-width: 1280px;
+/* Layout and theme variables (dark mode in index.css) */
+.app {
+  --app-bg: var(--page-bg);
+  --app-surface: var(--surface);
+  --app-text: var(--text);
+  --app-text-muted: var(--text-muted);
+  --app-border: var(--border);
+  --app-control-bg: var(--control-bg);
+  --app-control-fg: var(--control-fg);
+  --app-preview-bg: var(--preview-bg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--app-bg);
+  color: var(--app-text);
+}
+
+.app--fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.app__header {
+  flex-shrink: 0;
+  padding: 0.75rem 1rem;
+  background: var(--app-surface);
+  border-bottom: 1px solid var(--app-border);
+}
+
+.app__header-inner {
+  max-width: 1400px;
   margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.app__title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.app__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.app__file-label {
+  cursor: pointer;
+}
+
+.app__file-button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  min-height: 44px;
+  line-height: 1.3;
+  box-sizing: border-box;
+  background: var(--app-control-bg);
+  color: var(--app-control-fg);
+  border: 1px solid var(--app-border);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.app__file-button:hover {
+  filter: brightness(1.05);
+}
+
+.app__file-input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.app__btn {
+  min-height: 44px;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--app-border);
+  background: var(--app-control-bg);
+  color: var(--app-control-fg);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.app__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.app__btn--primary {
+  background: var(--accent);
+  color: var(--accent-fg);
+  border-color: transparent;
+}
+
+.app__btn--secondary {
+  background: var(--app-control-bg);
+}
+
+.app__btn--icon {
+  padding: 0.5rem 0.75rem;
+  font-size: 1.25rem;
+}
+
+.app__btn--toggle {
+  font-size: 0.9rem;
+  padding: 0.4rem 0.75rem;
+  min-height: 38px;
+}
+
+.app__btn--toggle-active {
+  background: var(--accent);
+  color: var(--accent-fg);
+  border-color: transparent;
+}
+
+.app__label-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.app__label-text {
+  font-size: 0.9rem;
+  color: var(--app-text-muted);
+}
+
+.app__font-slider {
+  width: 90px;
+  min-height: 28px;
+  accent-color: var(--accent);
+}
+
+.app__error {
+  padding: 1rem;
+  margin: 0 1rem 1rem;
+  background: var(--error-bg);
+  color: var(--error-fg);
+  border-radius: 8px;
+}
+
+.app__loading {
+  padding: 3rem;
+  text-align: center;
+  color: var(--app-text-muted);
+}
+
+.app__nav {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--app-surface);
+  border-bottom: 1px solid var(--app-border);
+}
+
+.app__nav-btn {
+  min-width: 48px;
+  min-height: 48px;
+  padding: 0;
+  font-size: 1.75rem;
+  line-height: 1;
+  border-radius: 8px;
+  border: 1px solid var(--app-border);
+  background: var(--app-control-bg);
+  color: var(--app-control-fg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app__nav-btn:not(:disabled):hover {
+  filter: brightness(1.08);
+}
+
+.app__nav-info {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 1rem;
+  color: var(--app-text-muted);
+}
+
+.app__jump-input {
+  width: 3.5rem;
+  min-width: 3rem;
+  padding: 0.4rem 0.5rem;
+  font-size: 1rem;
+  text-align: center;
+  border: 1px solid var(--app-border);
+  border-radius: 6px;
+  background: var(--app-bg);
+  color: var(--app-text);
+}
+
+.app__nav-sep {
+  opacity: 0.7;
+}
+
+.app__main {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .app__main {
+    flex-direction: column;
+  }
+}
+
+.app__preview-wrap {
+  flex: 1 1 calc(100% - var(--notes-width-percent, 50%));
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 1rem;
+  border-right: 1px solid var(--app-border);
+}
+
+@media (max-width: 768px) {
+  .app__preview-wrap {
+    flex: 0 0 auto;
+    width: 100%;
+    max-height: 45vh;
+    border-right: none;
+    border-bottom: 1px solid var(--app-border);
+  }
+}
+
+.app__notes-wrap {
+  flex: 1 1 var(--notes-width-percent, 50%);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 1rem;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .app__notes-wrap {
+    flex: 1 1 auto;
+  }
+}
+
+.app__welcome {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
   padding: 2rem;
+  color: var(--app-text-muted);
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.app__resume-hint {
+  padding: 0.5rem 1rem;
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--app-text-muted);
+  text-align: center;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Slide preview component */
+.slide-preview {
+  flex: 1;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--app-preview-bg);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.slide-preview--empty,
+.slide-preview--loading,
+.slide-preview--error {
+  padding: 2rem;
 }
 
-.card {
-  padding: 2em;
+.slide-preview__placeholder,
+.slide-preview__fallback {
+  margin: 0;
+  color: var(--app-text-muted);
+  text-align: center;
+  font-size: 1rem;
 }
 
-.read-the-docs {
-  color: #888;
+.slide-preview__wrapper {
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.slide-preview__content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Library output: one root div; we position and scale it via JS */
+.slide-preview__content > div {
+  /* scaled and centered by SlidePreview ResizeObserver */
+}
+
+/* Notes panel */
+.notes-panel {
+  flex: 1;
+  overflow: auto;
+  line-height: 1.6;
+}
+
+.notes-panel--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notes-panel__empty {
+  margin: 0;
+  color: var(--app-text-muted);
+}
+
+.notes-panel__content {
+  width: 100%;
+  max-width: 100%;
+}
+
+.notes-panel__paragraph {
+  margin: 0 0 0.6em;
+}
+
+.notes-panel__paragraph--bullet {
+  padding-left: 0.25em;
+}
+
+.notes-panel__bullet {
+  user-select: none;
+  margin-right: 0.25em;
+}
+
+.notes-panel__paragraph--blank {
+  height: 0.6em;
+  margin-bottom: 0.4em;
+}
+
+/* Bullet-by-bullet mode */
+.notes-panel--bullet {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.notes-panel__bullet-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+  gap: 1.5em;
+  padding: 1em 0;
+}
+
+.notes-panel__bullet-prev,
+.notes-panel__bullet-next {
+  opacity: 0.3;
+  transition: opacity 0.2s;
+  max-height: 25%;
+  overflow: hidden;
+  flex-shrink: 1;
+}
+
+.notes-panel__bullet-next:has(.notes-panel__next-slide) {
+  opacity: 1;
+}
+
+.notes-panel__bullet-current {
+  flex-shrink: 0;
+  opacity: 1;
+  font-weight: 500;
+}
+
+.notes-panel__next-slide {
+  margin: 0;
+  color: #ff1744;
+  font-weight: 600;
+  opacity: 1;
 }

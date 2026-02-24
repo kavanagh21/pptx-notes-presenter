@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@jvmr/pptx-to-html": "^1.0.0",
+    "jszip": "^3.10.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
