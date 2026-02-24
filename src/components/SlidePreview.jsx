@@ -1,6 +1,15 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { pptxToHtml } from '@jvmr/pptx-to-html';
 
+function readFileAsArrayBuffer(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error || new Error('Failed to read file'));
+    reader.readAsArrayBuffer(file);
+  });
+}
+
 const FALLBACK_MSG = 'Preview unavailable for this slide (notes still available)';
 
 /** Default slide size the library uses (we scale output to fit container) */
@@ -22,7 +31,9 @@ export function SlidePreview({ fileOrBuffer, currentSlideIndex, className = '', 
   const getArrayBuffer = useCallback(async () => {
     if (!fileOrBuffer) return null;
     if (fileOrBuffer instanceof ArrayBuffer) return fileOrBuffer;
-    if (fileOrBuffer.arrayBuffer) return await fileOrBuffer.arrayBuffer();
+    if (fileOrBuffer instanceof Blob || fileOrBuffer instanceof File) {
+      return await readFileAsArrayBuffer(fileOrBuffer);
+    }
     return null;
   }, [fileOrBuffer]);
 

@@ -7,6 +7,19 @@ import { SlidePreview } from './components/SlidePreview';
 import { NotesPanel, getTopLevelGroups } from './components/NotesPanel';
 import './App.css';
 
+/**
+ * Read a File/Blob into an ArrayBuffer using FileReader (works on all iOS versions).
+ * File.arrayBuffer() can fail or return bad data on some iPad Safari versions.
+ */
+function readFileAsArrayBuffer(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error || new Error('Failed to read file'));
+    reader.readAsArrayBuffer(file);
+  });
+}
+
 const DEBOUNCE_SAVE_MS = 600;
 
 function App() {
@@ -71,7 +84,7 @@ function App() {
     setCurrentIndex(0);
     setResumeMode(false);
     try {
-      const buffer = await selectedFile.arrayBuffer();
+      const buffer = await readFileAsArrayBuffer(selectedFile);
       const slides = await extractNotesFromPptx(buffer);
       setArrayBuffer(buffer);
       setExtractedSlides(slides);
@@ -359,7 +372,7 @@ function App() {
           >
             <section className="app__preview-wrap">
               <SlidePreview
-                fileOrBuffer={resumeMode ? null : file || arrayBuffer}
+                fileOrBuffer={resumeMode ? null : arrayBuffer}
                 currentSlideIndex={currentIndex}
                 className="app__preview"
                 isResumeMode={resumeMode}
