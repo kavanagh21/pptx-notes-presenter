@@ -313,7 +313,7 @@ function App() {
 
       {loading && (
         <div className="app__loading">
-          <p>Loading presentation…</p>
+          <p>Loading presentation… (this may take a moment for cloud-stored files)</p>
         </div>
       )}
 
