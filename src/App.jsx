@@ -4,6 +4,8 @@ import { readFileAsArrayBuffer } from './lib/readFile';
 import { getLastDeck, saveLastDeck, clearLastDeck } from './lib/storage';
 import { useDarkMode } from './hooks/useDarkMode';
 import { useFullscreen } from './hooks/useFullscreen';
+import { useWakeLock } from './hooks/useWakeLock';
+import { usePwaUpdate } from './hooks/usePwaUpdate';
 import { SlidePreview } from './components/SlidePreview';
 import { NotesPanel, getTopLevelGroups } from './components/NotesPanel';
 import './App.css';
@@ -28,7 +30,9 @@ function App() {
   const touchStartX = useRef(0);
 
   const { isDark, toggle: toggleDark } = useDarkMode();
-  const { isFullscreen, toggle: toggleFullscreen, wakeLockActive } = useFullscreen(containerRef);
+  const { isFullscreen, isStandalone, toggle: toggleFullscreen } = useFullscreen(containerRef);
+  const { wakeLockActive, wakeLockSupported, toggle: toggleWakeLock } = useWakeLock();
+  const { updateAvailable, offlineReady, applyUpdate, dismissUpdate } = usePwaUpdate();
 
   const slideCount = extractedSlides.length;
   const currentSlide = extractedSlides[currentIndex];
@@ -226,7 +230,7 @@ function App() {
     >
       <header className="app__header">
         <div className="app__header-inner">
-          <h1 className="app__title">Presenter Notes <span className="app__version">v1.1.0</span></h1>
+          <h1 className="app__title">Presenter Notes <span className="app__version">v1.2.0</span></h1>
           <div className="app__controls">
             <label className="app__file-label">
               <span className="app__file-button">Choose file</span>
@@ -292,25 +296,53 @@ function App() {
             >
               {isDark ? '☀️' : '🌙'}
             </button>
-            <button
-              type="button"
-              className="app__btn app__btn--icon"
-              onClick={toggleFullscreen}
-              title={
-                isFullscreen
-                  ? `Exit full screen${wakeLockActive ? ' (screen lock prevented)' : ''}`
-                  : 'Full screen (keeps screen awake)'
-              }
-              aria-label={isFullscreen ? 'Exit full screen' : 'Full screen'}
-            >
-              {isFullscreen ? '✕' : '⛶'}
-            </button>
-            {wakeLockActive && (
-              <span className="app__wake-lock-badge" title="Screen will stay awake">☀</span>
+            {wakeLockSupported && (
+              <button
+                type="button"
+                className={`app__btn app__btn--icon ${wakeLockActive ? 'app__btn--active' : ''}`}
+                onClick={toggleWakeLock}
+                title={wakeLockActive ? 'Allow screen to sleep' : 'Keep screen awake'}
+                aria-label={wakeLockActive ? 'Allow screen to sleep' : 'Keep screen awake'}
+                aria-pressed={wakeLockActive}
+              >
+                {wakeLockActive ? '☀' : '🔅'}
+              </button>
+            )}
+            {!isStandalone && (
+              <button
+                type="button"
+                className="app__btn app__btn--icon"
+                onClick={toggleFullscreen}
+                title={isFullscreen ? 'Exit full screen' : 'Full screen'}
+                aria-label={isFullscreen ? 'Exit full screen' : 'Full screen'}
+              >
+                {isFullscreen ? '✕' : '⛶'}
+              </button>
             )}
           </div>
         </div>
       </header>
+
+      {updateAvailable && (
+        <div className="app__update-banner" role="status">
+          <span>A new version is available.</span>
+          <button type="button" className="app__btn app__btn--primary app__btn--sm" onClick={applyUpdate}>
+            Update now
+          </button>
+          <button type="button" className="app__btn app__btn--secondary app__btn--sm" onClick={dismissUpdate}>
+            Later
+          </button>
+        </div>
+      )}
+
+      {offlineReady && !updateAvailable && (
+        <div className="app__update-banner app__update-banner--ok" role="status">
+          <span>App ready to work offline.</span>
+          <button type="button" className="app__btn app__btn--secondary app__btn--sm" onClick={dismissUpdate}>
+            OK
+          </button>
+        </div>
+      )}
 
       {loadError && (
         <div className="app__error" role="alert">
