@@ -226,7 +226,7 @@ function App() {
     >
       <header className="app__header">
         <div className="app__header-inner">
-          <h1 className="app__title">Presenter Notes <span className="app__version">v1.0.0</span></h1>
+          <h1 className="app__title">Presenter Notes <span className="app__version">v1.1.0</span></h1>
           <div className="app__controls">
             <label className="app__file-label">
               <span className="app__file-button">Choose file</span>
