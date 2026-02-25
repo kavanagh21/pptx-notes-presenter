@@ -14,6 +14,7 @@ A client-side web app that loads a PowerPoint (.pptx / .ppsx) file in the browse
 - **Adjustable layout** — resize the notes/preview split and adjust font size with sliders
 - **Navigation** — keyboard (Arrow keys, Space, Page Up/Down), touch swipe, and a jump-to-slide input
 - **Offline resume** — saves the last loaded deck's notes to IndexedDB so you can resume without re-uploading
+- **Installable PWA** — install to your home screen for an app-like experience with offline support
 - **100% client-side** — no server, no uploads; your files never leave the device
 - **iPad / iOS friendly** — robust file reading with multiple fallback strategies for cloud storage providers (OneDrive, iCloud Drive)
 
@@ -52,10 +53,19 @@ The built output goes to `dist/` and is configured with `base: "/pptx-notes-pres
 5. Adjust **Font** size and **Text width** sliders to suit your screen
 6. Enter **Full screen** for a distraction-free presenter view (screen stays awake automatically)
 
+### Install as an app (PWA)
+
+The app is a Progressive Web App — you can install it for a native app-like experience:
+
+- **iPad / iPhone (Safari)**: Tap the Share button → **Add to Home Screen**
+- **Chrome (desktop or Android)**: Click the install icon in the address bar, or Menu → **Install app**
+- **Edge**: Menu → **Apps → Install this site as an app**
+
+Once installed, the app launches in its own window without browser chrome, and the service worker caches all assets for fast repeat loads.
+
 ### iPad tips
 
 - If your file is stored in **OneDrive or iCloud Drive** and fails to load, save a local copy first: in the Files app, long-press the file → Copy → paste into "On My iPad", then select that copy
-- The app works best when added to the Home Screen (Share → Add to Home Screen) for a more app-like experience
 
 ## Tech stack
 
@@ -67,6 +77,7 @@ The built output goes to `dist/` and is configured with `base: "/pptx-notes-pres
 | ZIP / OOXML parsing | [JSZip](https://stuk.github.io/jszip/) + DOMParser |
 | Persistence | IndexedDB (deck data), localStorage (preferences) |
 | Screen Wake Lock | [Screen Wake Lock API](https://developer.mozilla.org/en-US/docs/Web/API/Screen_Wake_Lock_API) |
+| PWA / Service Worker | [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) + Workbox |
 
 ## Project structure
 

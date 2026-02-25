@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#2563eb"/>
+  <!-- Slide shape -->
+  <rect x="60" y="100" width="250" height="180" rx="16" fill="#fff" opacity="0.95"/>
+  <!-- Slide content lines -->
+  <rect x="90" y="140" width="120" height="14" rx="4" fill="#2563eb" opacity="0.5"/>
+  <rect x="90" y="168" width="180" height="10" rx="4" fill="#2563eb" opacity="0.3"/>
+  <rect x="90" y="190" width="160" height="10" rx="4" fill="#2563eb" opacity="0.3"/>
+  <rect x="90" y="212" width="140" height="10" rx="4" fill="#2563eb" opacity="0.3"/>
+  <!-- Notes shape -->
+  <rect x="200" y="230" width="250" height="180" rx="16" fill="#fff" opacity="0.9"/>
+  <!-- Notes bullet lines -->
+  <circle cx="236" cy="278" r="6" fill="#f59e0b"/>
+  <rect x="254" y="272" width="160" height="12" rx="4" fill="#334155"/>
+  <circle cx="236" cy="310" r="6" fill="#f59e0b"/>
+  <rect x="254" y="304" width="140" height="12" rx="4" fill="#334155"/>
+  <circle cx="236" cy="342" r="6" fill="#f59e0b"/>
+  <rect x="254" y="336" width="150" height="12" rx="4" fill="#334155"/>
+  <circle cx="236" cy="374" r="6" fill="#f59e0b"/>
+  <rect x="254" y="368" width="120" height="12" rx="4" fill="#334155"/>
+</svg>
