@@ -122,6 +122,13 @@
   font-size: 1.25rem;
 }
 
+.app__wake-lock-badge {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  margin-left: -0.25rem;
+  cursor: default;
+}
+
 .app__btn--toggle {
   font-size: 0.9rem;
   padding: 0.4rem 0.75rem;

@@ -28,7 +28,7 @@ function App() {
   const touchStartX = useRef(0);
 
   const { isDark, toggle: toggleDark } = useDarkMode();
-  const { isFullscreen, toggle: toggleFullscreen } = useFullscreen(containerRef);
+  const { isFullscreen, toggle: toggleFullscreen, wakeLockActive } = useFullscreen(containerRef);
 
   const slideCount = extractedSlides.length;
   const currentSlide = extractedSlides[currentIndex];
@@ -296,11 +296,18 @@ function App() {
               type="button"
               className="app__btn app__btn--icon"
               onClick={toggleFullscreen}
-              title={isFullscreen ? 'Exit full screen' : 'Full screen'}
+              title={
+                isFullscreen
+                  ? `Exit full screen${wakeLockActive ? ' (screen lock prevented)' : ''}`
+                  : 'Full screen (keeps screen awake)'
+              }
               aria-label={isFullscreen ? 'Exit full screen' : 'Full screen'}
             >
               {isFullscreen ? '✕' : '⛶'}
             </button>
+            {wakeLockActive && (
+              <span className="app__wake-lock-badge" title="Screen will stay awake">☀</span>
+            )}
           </div>
         </div>
       </header>
